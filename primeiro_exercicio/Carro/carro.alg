@@ -25,8 +25,4 @@ inicio
    fimse
 
 
-teste
-
-
-
 fimalgoritmo
