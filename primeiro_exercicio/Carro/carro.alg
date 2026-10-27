@@ -24,4 +24,9 @@ inicio
       escreva("Compra recusada! O carro nao atende a todos os requisitos.")
    fimse
 
+
+teste
+
+
+
 fimalgoritmo
