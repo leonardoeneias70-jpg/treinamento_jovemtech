@@ -18,7 +18,7 @@ inicio
    escreva("Digite o valor do carro: R$ ")
    leia(valor)
 
-   se (cor = "Azul") e (potencia = 1.8) e (fabricante = "Ford") e (valor <= 40000) ENTAO
+   se ((cor = "Azul") e (potencia = 1.8) e (fabricante = "Ford") e (valor <= 40000)) ENTAO
       escreva("Compra aprovada! O carro atende a todos os requisitos.")
    senao
       escreva("Compra recusada! O carro nao atende a todos os requisitos.")
