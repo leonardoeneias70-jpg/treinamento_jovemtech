@@ -40,11 +40,7 @@ class Pedido {
 const pedIdo = new Pedido("R$ 40,00", "Rua A", "Pizza de Frango", "Grande");
 
 console.log(`Pedido: ${pedIdo.Descricao}, Endereço: ${pedIdo.Endereco}, Preço: ${pedIdo.Preco}, Porção: ${pedIdo.Porcao}`);
-
 pedIdo.pagar();
-
-console.log(`Status final do pagamento: ${pedIdo.pago ? 'Pago' : 'Não pago'}`);
-
 
 
 /*
