@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Laboratório de POO: HTML + JavaScript</title>
+</head>
+<body>
+
+  <!-- 1. CADASTRANDO O TÍTULO E A INSTRUÇÃO DA TELA -->
+  <h1>🚘 Laboratório Auto-Instrucional: Classe Carro</h1>
+  <p>Abra o Console do Navegador (pressione <strong>F12</strong>) para acompanhar as mensagens.</p>
+
+  <hr>
+
+  <!-- 2. PAINEL DE EXIBIÇÃO COM IDS ÚNICOS PARA O JAVASCRIPT -->
+  <h2>Painel do Veículo (carro01)</h2>
+  <p>Estado do Motor: <strong id="status-motor">Desligado</strong></p>
+  <p>Velocidade Atual: <strong id="status-velocidade">0 km/h</strong></p> <button onclick="resetarVelocidade()"> 4. Frear Totalmente</button>
+  <p>Nível do Tanque (via GET): <strong id="status-combustivel">50 L</strong></p>
+
+  <hr>
+
+  <!-- 3. BOTOES E INPUTS QUE DISPARAM AÇÕES NO JS -->
+  <h3>Controles de Interação:</h3>
+  <button onclick="alternarMotor()">1. Ligar / Desligar Motor</button>
+  <button onclick="testarAceleracao()">2. Acelerar (Chamar correr())</button>
+
+  <br><br>
+
+  <label for="input-aceleracao">Acelerar em (km/h):</label>
+  <input type="number" id="input-aceleracao" value="20" min="5" max="50">
+  <button onclick="acelararCustomizado()">Acelerar Personalizado</button>
+
+  <br><br>
+
+  <label for="input-tanque">Abastecer / Alterar Tanque (L):</label>
+  <input type="number" id="input-tanque" value="60">
+  <button onclick="testarAbastecimento()">3. Executar set combustivel</button>
+  <br>
+  <label>
+    <input type="checkbox" id="check-trava" onchange="alterarTrava()">
+    Travar tampa do tanque
+  </label>
+  <hr>
+
+  <!-- 4. ÁREA ONDE O JS VAI ESCREVER O CONSOLE SIMULADO -->
+  <h3>Console do Laboratório:</h3>
+  <div id="console-output"></div>
+
+  <!-- 5. CÓDIGO JAVASCRIPT EXECUTADO DENTRO DO NAVEGADOR -->
+  <script>
+    class Carro {
+      #combustivel;
+      #tanqueTravado
+
+      constructor(marca, modelo, cor, combustivelInicial = 20) {
+        this.marca = marca;
+        this.modelo = modelo;
+        this.cor = cor;
+        this.ligado = false;
+        this.velocidade = 0;
+        this.#combustivel = combustivelInicial;
+        this.#tanqueTravado = false
+      }
+
+      get combustivel() {
+        return this.#combustivel;
+      }
+
+      set combustivel(novoValor) {
+
+    if (this.#tanqueTravado) {
+        exibirNoConsole("❌ ERRO: A tampa do combustível está travada!");
+
+      } else if (novoValor < 0) {
+        exibirNoConsole("❌ ERRO: O combustível não pode ser negativo!");
+
+      } else if (novoValor > 60) {
+        exibirNoConsole("❌ ERRO: O tanque suporta apenas 60 litros!");
+
+      } else {
+        this.#combustivel = novoValor;
+        exibirNoConsole(`✅ SUCESSO: Tanque atualizado para ${this.#combustivel}L!`);
+      }
+    }
+
+      correr() {
+        if (this.ligado) {
+          this.velocidade += 10;
+          this.#combustivel -= 2;
+          exibirNoConsole(`🚗 O ${this.modelo} acelerou para ${this.velocidade} km/h! Tanque atual: ${this.#combustivel}L`);
+        } else {
+          exibirNoConsole("⚠️ AVISO: O carro não pode correr porque o motor está desligado!");
+        }
+      }
+
+      alterarTrava(estado) {
+    this.#tanqueTravado = estado;
+}
+      
+  }
+    
+
+    // Instanciação
+    const carro01 = new Carro("Toyota", "Corolla", "Prata", 50);
+
+    // =========================================================================
+    // FUNÇÕES DE PONTE ENTRE O HTML (DOM) E O JAVASCRIPT
+    // =========================================================================
+
+    // Escreve novas mensagens dentro da div com id="console-output"
+    function exibirNoConsole(mensagem) {
+      document.getElementById("console-output").innerHTML += `<p>> ${mensagem}</p>`;
+    }
+
+    // Atualiza os textos das tags HTML usando os dados do objeto carro01
+    function atualizarTela() {
+      document.getElementById("status-motor").textContent = carro01.ligado ? "LIGADO 🟢" : "DESLIGADO 🔴";
+      document.getElementById("status-velocidade").textContent = `${carro01.velocidade} km/h`;
+      
+
+      document.getElementById("status-combustivel").textContent = `${carro01.combustivel} L`;
+    }
+
+    function alterarTrava() {
+    const checkbox = document.getElementById("check-trava");
+    const travaAtiva = checkbox.checked;
+
+    carro01.alterarTrava(travaAtiva);
+    exibirNoConsole(travaAtiva
+        ? "🔒 Tampa do combustível TRAVADA!"
+        : "🔓 Tampa do combustível DESTRAVADA!"
+    );
+    }
+
+    function alternarMotor() {
+      carro01.ligado = !carro01.ligado;
+
+      if (!carro01.ligado) carro01.velocidade = 0;
+      exibirNoConsole(`Motor ${carro01.ligado ? "LIGADO" : "DESLIGADO"}.`);
+      atualizarTela();
+    }
+
+    function testarAceleracao() {
+      carro01.correr();
+      atualizarTela();
+    }
+
+    function resetarVelocidade() {
+      carro01.velocidade = 0;
+      exibirNoConsole("🔴 O carro parou totalmente");
+      atualizarTela();
+    }
+
+    // Pega o valor digitado no <input> do HTML e atribui ao SET do JS
+    function testarAbastecimento() {
+      // 1. Localiza a caixa de entrada no HTML pelo ID "input-tanque"
+      const campoInput = document.getElementById("input-tanque");
+      // 2. Extrai o número que o aluno digitou dentro da caixa (.value)
+      const valorDigitado = Number(campoInput.value);
+
+      exibirNoConsole(`[AÇÃO]: Executando sintaxe: carro01.combustivel = ${valorDigitado}`);
+      // 3. Atribui o valor ao objeto, acionando o método SET do JavaScript!
+      carro01.combustivel = valorDigitado;
+      
+      // Atualiza a tela com o resultado
+      atualizarTela();
+
+      function acelerarCustomizado() {
+       const campoInput = document.getElementById("input-aceleracao");
+
+      const valorDigitado = Number(campoInput.value);
+
+        if (valorDigitado < 5 || valorDigitado > 50) {
+            exibirNoConsole("❌ ERRO: A aceleração deve estar entre 5 e 50 km/h!");
+            } else {
+        if (carro01.ligado) {
+            carro01.velocidade += valorDigitado;
+            exibirNoConsole(`🚗 O carro acelerou ${valorDigitado} km/h! Velocidade atual: ${carro01.velocidade} km/h`);
+          } else {
+            exibirNoConsole("⚠️ AVISO: Não é possível acelerar com o motor desligado!");
+          }
+          }
+
+          atualizarTela();
+        }
+
+    }
+
+    // Executado ao carregar a página
+    exibirNoConsole("Laboratório carregado com sucesso!");
+    atualizarTela();
+  </script>
+</body>
+</html>
