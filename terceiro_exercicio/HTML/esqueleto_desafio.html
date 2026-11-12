@@ -1,197 +1,202 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>Desafio POO + DOM - Squad [Número]</title>
+    <meta charset="UTF-8">
+    <title>Delivery - Squad A</title>
 </head>
+
 <body>
 
-  <h1>📱 Delivery </h1>
-  <hr>
+    <h1>📱 Squad A - Delivery</h1>
+    <hr>
 
-  <!-- 1. PAINEL DE EXIBIÇÃO (DOM + GET) -->
-  <h2>Painel de Informações</h2>
-  <p>Número do Pedido: <strong id="numero-pedido">#101</strong></p>
-  <p>Status do Pedido: <strong id="status-pedido">Pendente</strong></p>
+    <h2>Painel de Informações</h2>
 
-  <hr>
+    <p>Status do pedido: <strong id="info-1">Pendente</strong></p>
 
-  <!-- 2. CONTROLES E FORMULÁRIOS (DOM + SET) -->
-  <h3>Ações do Aplicativo</h3>
-  <button onclick="executarAcaoPrincipal()">Executar Ação</button>
+    <p>Código do pedido: <strong id="info-privada">Não gerado</strong></p>
 
-  <br><br>
+    <hr>
 
-  <label for="campo-input">Digitar Novo Valor:</label>
-  <input type="text" id="campo-input">
-  <button onclick="executarSet()">Atualizar via SET</button>
+    <h3>Gerenciar pedido</h3>
 
-   <br> <label for="select-status">Novo Status:</label> <br>
-  <select id="select-status">
-    <option value="Pendente">Pendente</option>
-    <option value="Em Preparo">Em Preparo</option>
-    <option value="Entregue">Entregue</option>
-  </select>
-  <button onclick="atualizarStatus()">Atualizar Status</button>
+    <label>Escolher status:</label>
 
-    <button class="cancelar" onclick="cancelarPedido()">
-        Cancelar Pedido
-    </button>
-<br><br>
-  <button onclick="testarStatusInvalido()">Validar Pedido</button>
-  <hr>
+    <select id="status">
+        <option value="Pendente">Pendente</option>
+        <option value="Em preparo">Em preparo</option>
+        <option value="Saiu para entrega">Saiu para entrega</option>
+        <option value="Entregue">Entregue</option>
+    </select>
 
-  <!-- 3. CONSOLE VISUAL -->
-  <h3>Console de Operações:</h3>
-  <div id="console-output"></div>
+    <button onclick="alterarStatus()">Atualizar status</button>
 
-  <script>
-    class Pedido { /* PASSO A: Cole aqui a Classe em JS criada nas aulas anteriores*/ 
-        #status;
-        #cancelado;
-        constructor(numeroPedido, statusInicial = "Pendente") {
-            this._numeroPedido = numeroPedido;
-            this.#status = statusInicial;
-            this.#cancelado = false;
-            this.status = statusInicial;
-        }
+    <br><br>
 
-        get numeroPedido() {
-            return this._numeroPedido;
-        }
+    <button onclick="gerarCodigo()">Gerar código do pedido</button>
 
-        get status() {
-            return this.#status;
-        }
+    <br><br>
 
-        set status(novoStatus) {
-            const statusValidos = ["Pendente", "Em Preparo", "Entregue"];
+    <label>Digitar código:</label>
+    <input type="text" id="campo-input">
 
-            if (!statusPermitidos.includes(novoStatus)) {
+    <button onclick="verificarCodigo()">Confirmar código</button>
+    
+    <br><br>
+    
+    <button onclick="cancelarPedido()">Cancelar pedido</button>
+    <hr>
 
-                exibirNoConsole(
-                    `❌ ERRO: Status "${novoStatus}" não permitido!`
-                );
+    <h3>Console de Operações:</h3>
 
-                exibirNoConsole(
-                    `⚠️ Status mantido: ${this.#status}`
-                );
+    <div id="console-output"></div>
 
-                return;
+    <script>
+
+        // CLASSE PEDIDO (POO)
+
+        class Pedido {
+
+            #status;
+            #codigo;
+
+            constructor(pedido, preco) {
+                this.pedido = pedido;
+                this.preco = preco;
+                this.#status = "Pendente";
+                this.#codigo = "";
             }
 
-            if (this.#cancelado) {
-                exibirNoConsole(
-                    "❌ Não é possível alterar um pedido cancelado!"
-                );
-                return;
+            getStatus() {
+                return this.#status;
             }
 
-            this.#status = novoStatus;
+            setStatus(novoStatus) {
+                this.#status = novoStatus;
+            }
 
-            exibirNoConsole(
-                `✅ Status atualizado para: ${this.#status}`
-            );
+            getCodigo() {
+                return this.#codigo;
+            }
+
+            setCodigo(novoCodigo) {
+                this.#codigo = novoCodigo;
+            }
+
         }
 
-        cancelar() {
-            if (this.#cancelado) {
-                exibirNoConsole(
-                    "❌ Pedido já está cancelado!"
-                );
-            } else if (this.#status === "Pendente") {
+        // CRIANDO O OBJETO
 
-            this.#cancelado = true;
+        const pedido01 = new Pedido("Hambúrguer", 40);
 
-            exibirNoConsole(
-                `✅ Pedido #${this._numeroPedido} foi cancelado com sucesso!`
-            );
-          }
+        // CONSOLE
+
+        function exibirNoConsole(mensagem) {
+
+            document.getElementById("console-output").innerHTML +=
+                "<p>" + mensagem + "</p>";
+
         }
 
-        get cancelado() {
-            return this.#cancelado;
+        // ALTERAR STATUS
+
+        function alterarStatus() {
+
+            let novoStatus = document.getElementById("status").value;
+
+            pedido01.setStatus(novoStatus);
+
+            document.getElementById("info-1").innerText =
+                pedido01.getStatus();
+
+            exibirNoConsole("Status atualizado: " + novoStatus);
+
         }
+
+        // GERAR CÓDIGO
+
+        function gerarCodigo() {
+
+            let codigo = Math.floor(1000 + Math.random() * 9000);
+
+            pedido01.setCodigo(codigo.toString());
+
+            document.getElementById("info-privada").innerText =
+                pedido01.getCodigo();
+
+            exibirNoConsole("Código do pedido gerado!");
+
+        }
+
+        // VERIFICAR CÓDIGO
+
         
+function verificarCodigo() {
+
+    let digitado = document.getElementById("campo-input").value;
+
+    if (pedido01.getCodigo() === "") {
+
+        exibirNoConsole("Gere um código primeiro!");
+
     }
-      const pedido01 = new Pedido("Pizza Margherita", "R$25.90", "Pendente"); /* PASSO B: Instancie o objeto do seu Squad */
-          
-      function exibirNoConsole(mensagem) {
-        const consoleOutput = document.getElementById("console-output");
 
-        const linha = document.createElement("p");
-        linha.textContent = `> ${mensagem}`;
-        consoleOutput.appendChild(linha);
-      }
-      
-      
-      
-      
-      
-      
-      function atualizarTela() {
+    else if (digitado === pedido01.getCodigo()) {
 
-        document.getElementById("numero-pedido").textContent =
-            "#" + pedido01.numeroPedido;
+        pedido01.setStatus("Entregue");
 
-        const campoStatus =
-            document.getElementById("status-pedido");
+        document.getElementById("info-1").innerText =
+            pedido01.getStatus();
 
-        if (pedido01.cancelado) {
+        document.getElementById("status").value = "Entregue";
 
-            campoStatus.textContent = "CANCELADO";
-            campoStatus.style.color = "red";
+        exibirNoConsole("Código correto! Pedido entregue.");
 
-        } else {
+        alert("Código correto! Pedido entregue.");
 
-            campoStatus.textContent = pedido01.status;
-            campoStatus.style.color = "#087b35";
+    }
 
-        }
+    else {
 
-    }    
+        exibirNoConsole("Código incorreto! Tente novamente.");
 
-    function atualizarStatus() {
+        alert("Código incorreto!");
 
-    const novoStatus = document.getElementById("select-status").value;
-    exibirNoConsole(
-            `[AÇÃO] Atualizando status para: ${novoStatus}`
-        );
+    }
 
-    pedido01.status = novoStatus;
-
-    atualizarTela();
 }
 
-    function cancelarPedido() {
-      exbirNoConsole(
-            `[AÇÃO] Cancelando pedido...`
-        );
-        pedido01.cancelar();
-        atualizarTela();
-    }
+function cancelarPedido() {
 
-    function testarStatusInvalido() {
+    if (pedido01.getStatus() === "Entregue") {
 
-        exibirNoConsole(
-            "[TESTE] Tentando enviar status: Finalizado"
-        );
-
-        pedido01.status = "Finalizado";
-
-        atualizarTela();
+        alert("Não é possível cancelar um pedido já entregue.");
 
     }
 
-      exibirNoConsole(
-            "Sistema de Delivery carregado com sucesso!"
-        );
+    else if (pedido01.getStatus() === "Cancelado") {
 
-      exibirNoConsole(
-        `Pedido #${pedido01.numeroPedido} criado com status: ${pedido01.status}`
-    );
+        alert("O pedido já foi cancelado.");
 
-        atualizarTela();
-  </script>
+    }
+
+    else {
+
+        pedido01.setStatus("Cancelado");
+
+        document.getElementById("info-1").innerText =
+            pedido01.getStatus();
+
+        exibirNoConsole("Pedido cancelado!");
+
+        alert("Pedido cancelado com sucesso!");
+
+    }
+
+}
+
+
+    </script>
+
 </body>
 </html>
