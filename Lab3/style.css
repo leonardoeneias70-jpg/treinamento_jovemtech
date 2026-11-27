@@ -1,0 +1,33 @@
+body {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    background: #fafafa;
+}
+h1 {
+    color: #0066cc
+}
+p {
+    color: #555;
+}
+.importante{
+    color: red;
+}
+#especial{
+    background: yellow;
+}
+
+nav a {
+    color: #004080;
+    text-decoration: none;
+    margin-right: 8px;
+}
+
+nav a:hover {
+    text-decoration: underline;
+}
+
+div.caixa{
+    border: 2px solid #333;
+    padding: 20px;
+    margin: 20px;
+    background: #f9f9f9;
+}
